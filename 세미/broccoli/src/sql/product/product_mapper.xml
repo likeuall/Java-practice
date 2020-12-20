@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	
+	<entry key="selectAllProduct">
+		SELECT *
+		
+		  FROM (
+		        SELECT
+		              ROWNUM RNUM
+		            , A.* 
+		        FROM
+		            (SELECT 
+		                  P_NO
+		                , P_NAME
+		                , P_PRICE
+		                , P_DISCOUNT
+		                , P_DETAIL
+		                , P_THUMBNAIL
+		             FROM PRODUCT   
+		             
+		             ORDER 
+		                BY P_NO ASC) A
+		                )       
+		                
+		WHERE RNUM BETWEEN ? AND ?
+		
+	</entry>
+	
+	
+	<entry key="selectListCount">
+		
+		SELECT 
+		       COUNT(*) LISTCOUNT
+		  FROM PRODUCT
+		 
+	
+	</entry>
+	
+		<entry key="selectSearchCount">
+		
+		SELECT 
+		       COUNT(*) LISTCOUNT
+		  FROM PRODUCT
+		  WHERE P_NAME LIKE '%' || ? || '%'
+		 
+	
+	</entry>
+	
+	
+	<entry key="selectBestProduct">
+	
+		SELECT
+			      *
+		  FROM(   
+			   SELECT 
+			           ROWNUM RNUM
+			        , A.*
+			    
+			    FROM  
+			        (
+			        SELECT 
+			              P_NO
+			            , P_NAME
+			            , P_PRICE
+			            , P_DISCOUNT
+			            , P_DETAIL
+			            , P_THUMBNAIL
+			         FROM PRODUCT   
+			         LEFT JOIN P_CATEGORY USING(CATEGORY_NO)
+			         WHERE 
+			              CATEGORY_1 = '베스트'
+			         ORDER BY P_NO DESC  
+			           ) A
+			        )
+			WHERE RNUM BETWEEN ? AND ?
+				
+	
+	
+	</entry>
+	
+	
+	<entry key="selectNewProduct">
+		SELECT
+			      *
+		  FROM(   
+			   SELECT 
+			           ROWNUM RNUM
+			        , A.*
+			    
+			    FROM  
+			        (
+			        SELECT 
+			              P_NO
+			            , P_NAME
+			            , P_PRICE
+			            , P_DISCOUNT
+			            , P_DETAIL
+			            , P_THUMBNAIL
+			         FROM PRODUCT   
+
+			         LEFT JOIN P_CATEGORY USING(CATEGORY_NO)
+			         WHERE 
+			              CATEGORY_1 = '신상품'
+			         ORDER BY P_NO DESC  
+			           ) A
+			        )
+			WHERE RNUM BETWEEN ? AND ?
+	
+	</entry>
+	
+	
+	<entry key="selectEventProduct">
+
+		        SELECT 
+		              P_NO
+		            , P_NAME
+		            , P_PRICE
+		            , P_DISCOUNT
+		            , P_DETAIL
+		            , P_THUMBNAIL
+		            
+		         FROM PRODUCT   
+		         LEFT JOIN P_CATEGORY USING(CATEGORY_NO)
+		         WHERE 
+				      
+		               E_NO = ?
+		           
+		         ORDER BY P_NO DESC  
+	
+	</entry>
+	
+	
+	<entry key="selectDetailProduct">
+	
+		SELECT 
+		       P_NO
+		     , P_NAME
+		     , P_PRICE
+		     , P_DISCOUNT
+		     , P_THUMBNAIL
+		     , P_IMAGE1
+		     , P_IMAGE2
+		     , P_UNIT
+		     , P_WEIGHT
+		     , P_DELI
+		     , P_NATION
+		     , P_PACKTYPE
+		     , P_DETAIL
+		FROM PRODUCT     
+		WHERE P_NO = ?
+	
+	</entry>
+	
+	
+	<entry key="selectAdminProductList">
+		SELECT *
+		  FROM (
+		       SELECT      
+		             ROWNUM RNUM
+		           , A.* 
+		       FROM (    
+		            SELECT 
+		                    P_NO
+		                 ,  P_NAME
+		                 ,  P_INVENTORY
+		                 ,  P_COMPANY
+		              FROM  PRODUCT P
+		              ORDER
+		                BY  P_NO DESC
+		            ) A
+		  )
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+
+	
+	<entry key="selectUserReview">
+	
+		SELECT 
+		       review_board_no
+		     , review_rate
+		     , review_title
+		     , m.mem_id
+		     , r.reg_date
+		     , like_count
+		     , click_no
+		
+		FROM REVIEW r
+		JOIN MEMBERS m ON(r.MEM_NO = m.MEM_NO)
+		WHERE r.P_NO = ?
+	
+	
+	</entry>
+	
+	
+	<entry key="selectPhotoReview">
+		
+		SELECT 
+		       R.review_board_no
+		     , review_rate
+		     , review_title
+		     , M.mem_id
+		     , R.reg_date
+		     , like_count
+		     , click_no
+		     
+		FROM REVIEW R
+		JOIN MEMBERS M ON(R.MEM_NO = M.MEM_NO)
+		JOIN RV_ATTACH A ON(R.REVIEW_BOARD_NO = a.review_board_no)
+		WHERE R.P_NO = ?
+		  AND A.RV_ATTACH_IMG != 'N'
+			
+	
+	</entry>
+	
+	
+	<entry key="selectSortReview">
+	
+		SELECT 
+		       review_board_no
+		     , review_rate
+		     , review_title
+		     , m.mem_id
+		     , r.reg_date
+		     , like_count
+		     , click_no
+		
+		FROM REVIEW r
+		JOIN MEMBERS m ON(r.MEM_NO = m.MEM_NO)
+		WHERE r.P_NO = ?
+
+	</entry>
+	
+	
+	
+	<entry key="selectAdminProductDetail">
+		SELECT 
+		       P_NO
+		     , CATEGORY_1 || '/' || CATEGORY_2 || '/' || CATEGORY_3 AS "CATEGORY_NAME" 
+		     , E_TITLE
+		     , P_NAME
+		     , P_PRICE
+		     , P_DISCOUNT
+		     , P_IMAGE1
+		     , P_IMAGE2
+		     , P_INVENTORY
+		     , P_COMPANY
+		     , P_UNIT
+		     , P_WEIGHT
+		     , P_DETAIL
+		     , DIS_YN
+		     , E_YN
+		     , P_SMALLDETAIL
+		     , P_DELI
+		     , P_NATION
+		     , P_PACKTYPE
+		     , P_THUMBNAIL
+		     , P_OUT
+		FROM PRODUCT
+		JOIN P_CATEGORY USING(CATEGORY_NO)
+		LEFT JOIN EVENT USING(E_NO)
+		WHERE P_NO = ?
+	</entry>
+	
+	<entry key="insertProduct">
+		INSERT
+		  INTO PRODUCT
+		  (
+		       P_NO
+		    ,  CATEGORY_NO
+		    ,  E_NO
+		    ,  P_NAME
+		    ,  P_PRICE
+		    ,  P_DISCOUNT
+		    ,  P_IMAGE1
+		    ,  P_IMAGE2
+		    ,  P_INVENTORY
+		    ,  P_COMPANY
+		    ,  P_UNIT
+		    ,  P_WEIGHT
+		    ,  P_DETAIL
+		    ,  DIS_YN
+		    ,  E_YN
+		    ,  P_SMALLDETAIL
+		    ,  P_DELI
+		    ,  P_NATION
+		    ,  P_PACKTYPE
+		    ,  P_THUMBNAIL
+		  )
+		  VALUES
+		  (
+		      SEQ_PNO.NEXTVAL
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		    , ?
+		  )
+	</entry>
+	
+	<entry key="selectAdminProductByPName">
+		SELECT 
+		       P_NO
+		     , CATEGORY_1 || '/' || CATEGORY_2 || '/' || CATEGORY_3 AS "CATEGORY_NAME" 
+		     , E_TITLE
+		     , P_NAME
+		     , P_PRICE
+		     , P_DISCOUNT
+		     , P_IMAGE1
+		     , P_IMAGE2
+		     , P_INVENTORY
+		     , P_COMPANY
+		     , P_UNIT
+		     , P_WEIGHT
+		     , P_DETAIL
+		     , DIS_YN
+		     , E_YN
+		     , P_SMALLDETAIL
+		     , P_DELI
+		     , P_NATION
+		     , P_PACKTYPE
+		     , P_THUMBNAIL
+		     , P_OUT
+		FROM PRODUCT
+		JOIN P_CATEGORY USING(CATEGORY_NO)
+		LEFT JOIN EVENT USING(E_NO)
+		WHERE P_NAME LIKE  '%' || ? || '%'
+	</entry>
+	
+	<entry key="selectAdminProductByPCompany">
+		SELECT 
+		       P_NO
+		     , CATEGORY_1 || '/' || CATEGORY_2 || '/' || CATEGORY_3 AS "CATEGORY_NAME" 
+		     , E_TITLE
+		     , P_NAME
+		     , P_PRICE
+		     , P_DISCOUNT
+		     , P_IMAGE1
+		     , P_IMAGE2
+		     , P_INVENTORY
+		     , P_COMPANY
+		     , P_UNIT
+		     , P_WEIGHT
+		     , P_DETAIL
+		     , DIS_YN
+		     , E_YN
+		     , P_SMALLDETAIL
+		     , P_DELI
+		     , P_NATION
+		     , P_PACKTYPE
+		     , P_THUMBNAIL
+		     , P_OUT
+		FROM PRODUCT
+		JOIN P_CATEGORY USING(CATEGORY_NO)
+		LEFT JOIN EVENT USING(E_NO)
+		WHERE P_COMPANY LIKE  '%' || ? || '%'
+	</entry>
+	
+	<entry key="updateProduct">
+		UPDATE
+		       PRODUCT
+		  SET
+		       CATEGORY_NO =?
+		    ,  E_NO =?
+		    ,  P_NAME =?
+		    ,  P_PRICE =?
+		    ,  P_DISCOUNT =?
+		    ,  P_IMAGE1 =?
+		    ,  P_IMAGE2 =?
+		    ,  P_INVENTORY =?
+		    ,  P_COMPANY =?
+		    ,  P_UNIT =? 
+		    ,  P_WEIGHT =?
+		    ,  P_DETAIL =?
+		    ,  DIS_YN =?
+		    ,  E_YN =?
+		    ,  P_SMALLDETAIL =?
+		    ,  P_DELI =?
+		    ,  P_NATION =?
+		    ,  P_PACKTYPE =?
+		    ,  P_THUMBNAIL =?
+		 WHERE P_NO = ?
+	</entry>
+	
+	<entry key="selectProductQnaList">
+		SELECT *
+		  FROM (
+		       SELECT      
+		             ROWNUM RNUM
+		           , A.* 
+		       FROM (     
+		            SELECT
+		               QNA_NO
+		             , P_NAME  
+		             , QNA_TITLE
+		             , MEM_NAME
+		             , QNA_DATE     
+		             , YES_NO
+		             , NOTICE_YN
+		            FROM PRODUCT_QNA
+		            JOIN MEMBERS USING(MEM_NO)
+		            ORDER
+		                BY  QNA_NO DESC
+		            ) A
+		  )
+		WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	
+	<entry key="selectSearchList">
+	
+		SELECT *
+		
+		  FROM (
+		        SELECT
+		              ROWNUM RNUM
+		            , A.* 
+		        FROM
+		            (SELECT 
+		                  P_NO
+		                , P_NAME
+		                , P_PRICE
+		                , P_DISCOUNT
+		                , P_DETAIL
+		                , P_THUMBNAIL
+		             FROM PRODUCT
+		             WHERE P_NAME LIKE '%' || ? || '%'
+		             ORDER 
+		                BY P_NO ASC) A
+		                )       
+		                
+		WHERE RNUM BETWEEN ? AND ?
+	
+	</entry>
+	
+	<entry key="selectAdminProductQnaDetail">
+		SELECT
+		       P_NO
+		     , MEM_NAME
+		     , P_NAME
+		     , QNA_TITLE
+		     , QNA_DETAIL
+		     , QNA_ANSWER
+		     , YES_NO
+		     , QNA_DATE
+		     , NOTICE_YN
+		     , SECRET
+		 FROM PRODUCT_QNA
+		 JOIN MEMBERS USING(MEM_NO)
+		WHERE QNA_NO =?
+	</entry>
+	
+	<entry key="selectPdtQnaListCount">
+		SELECT 
+		      COUNT(*) LISTCOUNT
+		 FROM PRODUCT_QNA
+	</entry>
+	
+	
+	
+	
+	
+	
+</properties>
