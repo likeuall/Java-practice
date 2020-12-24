@@ -5,7 +5,7 @@
 3. 개발 목표  : 직관적인 UI로 접근성을 높이고, 상품을 구매한 회원들만 작성할 수 있는 리뷰 및 레시피 기능을 탑재하여 
                 	     신뢰도를 향상시킨 온라인 식재료 쇼핑몰의 구축
 
-4. 개발 환경  : 운영체제    - Windows
+4. 개발 환경  : 운영체제    - Windows <br>
                 	     개발도구    - Eclipse
                 	     DBMS	     - Oracle
                        Server	     - Apache Tomcat 8.5
